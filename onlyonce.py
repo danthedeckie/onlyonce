@@ -152,7 +152,11 @@ class SingleProcessLock(object): #pylint: disable=R0903
                 # OK. It seems to have died, but not cleaned up after
                 # itself.  This isn't great, but oh well.
                 note('Previously seems to have failed.', 'WARNING')
-                remove(self.pidfile)
+                try:
+                    remove(self.pidfile)
+                except OSError:
+                    # seems like it's gone already
+                    pass
 
         register_for_sighandler(self)
         return self
