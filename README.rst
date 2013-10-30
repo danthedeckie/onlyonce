@@ -5,6 +5,11 @@ Only Once
 A simple Lock Dir system. Creating Dirs is atomic, which is useful for
 locking things to only let one version of a process start.
 
+A directory is created, say called 'lock'.
+Inside this directory will be a PID file, which keeps the PID of the running process.
+If the process dies, or is killed, then the whole directory will be deleted, allowing
+the task to be run again later, and not leaving clutter around the place.
+
 ------
 Usage:
 ------
@@ -40,6 +45,9 @@ Which doesn't block.
 ------
 Notes:
 ------
+
+You can 'kill' the task, and onlyonce will clean up the lock dir for you.  If you 'kill -9' the
+script, however, python freaks out and quits before the script can do anything. Sorry!
 
 This system is NOT designed to replace large daemonising clever init/systemd whatever stuff.
 It was written simply to let us run rsync & other processess around the campus without

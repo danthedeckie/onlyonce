@@ -18,9 +18,9 @@
 
 '''
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
-from subprocess import check_output, Popen, CalledProcessError
+from subprocess import Popen, CalledProcessError, PIPE
 import signal
 from datetime import datetime
 from os.path import join as pathjoin
@@ -107,11 +107,13 @@ def running_pid_from_file(filename):
     except IOError:
         return False
 
-    try:
-        check_output(['ps', '-p', pid])
-        return int(pid)
-    except CalledProcessError:
+    ps = Popen(['ps', '-p', pid], stderr=PIPE, stdout=PIPE )
+    ps.communicate()
+
+    if ps.returncode:
         return False
+    else:
+        return int(pid)
 
 
 def note(text, level='INFO'):
